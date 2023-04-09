@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 	
@@ -19,16 +21,16 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		DAOUser user = userDao.findByUsername(username);
-//		if (user == null) {
-//			throw new UsernameNotFoundException("User not found with username: " + username);
-//		}
-//		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-//				new ArrayList<>());
-//	}
-//	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		DAOUser user = userDao.findByUsername(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found with username: " + username);
+		}
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+				new ArrayList<>());
+	}
+
 	public DAOUser save(UserDTO user) {
 		DAOUser newUser = new DAOUser();
 		newUser.setUsername(user.getUsername());
@@ -36,9 +38,5 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return userDao.save(newUser);
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 }
